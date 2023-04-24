@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from mingpt.utils import CfgNode as CN
+from my_mingpt.utils import CfgNode as CN
 
 # -----------------------------------------------------------------------------
 
