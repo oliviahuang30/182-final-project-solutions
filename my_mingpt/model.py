@@ -1,13 +1,3 @@
-"""
-Full definition of a GPT Language Model, all of it in this single file.
-
-References:
-1) the official GPT-2 TensorFlow implementation released by OpenAI:
-https://github.com/openai/gpt-2/blob/master/src/model.py
-2) huggingface/transformers PyTorch implementation:
-https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
-"""
-
 import math
 
 import torch
@@ -32,12 +22,9 @@ class NewGELU(nn.Module):
         ############################################################################
         return output
 
-### TODO: Update this with some new attention thing
 class MySelfAttention(nn.Module):
     """
-    A vanilla multi-head masked self-attention layer with a projection at the end.
-    It is possible to use torch.nn.MultiheadAttention here but I am including an
-    explicit implementation here to show that there is nothing too scary here.
+    Synthetic Self-Attention
     """
 
     def __init__(self, config):
@@ -314,10 +301,6 @@ class GPT(nn.Module):
         the sequence max_new_tokens times, feeding the predictions back into the model each time.
         Most likely you'll want to make sure to be in model.eval() mode of operation for this.
         """
-        ############################################################################
-        # TODO: implement this function
-        ############################################################################
-        # raise NotImplementedError()
         for _ in range(max_new_tokens):
             # if the sequence context is growing too long we must crop it at block_size
             idx_cond = idx if idx.size(1) <= self.block_size else idx[:, -self.block_size:]
@@ -338,6 +321,4 @@ class GPT(nn.Module):
                 _, idx_next = torch.topk(probs, k=1, dim=-1)
             # append sampled index to the running sequence and continue
             idx = torch.cat((idx, idx_next), dim=1)
-        ############################################################################
-
         return idx

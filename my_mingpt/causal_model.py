@@ -1,13 +1,3 @@
-"""
-Full definition of a GPT Language Model, all of it in this single file.
-
-References:
-1) the official GPT-2 TensorFlow implementation released by OpenAI:
-https://github.com/openai/gpt-2/blob/master/src/model.py
-2) huggingface/transformers PyTorch implementation:
-https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py
-"""
-
 import math
 
 import torch
@@ -29,8 +19,6 @@ class NewGELU(nn.Module):
 class CausalSelfAttention(nn.Module):
     """
     A vanilla multi-head masked self-attention layer with a projection at the end.
-    It is possible to use torch.nn.MultiheadAttention here but I am including an
-    explicit implementation here to show that there is nothing too scary here.
     """
 
     def __init__(self, config):
