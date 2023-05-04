@@ -44,10 +44,10 @@ class MySelfAttention(nn.Module):
         self.attn_drop = nn.Dropout( config.attn_pdrop)
         self.resid_drop = nn.Dropout( config.resid_pdrop)
         # output projection
-        self.proj = nn.Linear( config.n_embd,  config.n_embd) #dmodel,dmodel
+        self.c_proj = nn.Linear( config.n_embd,  config.n_embd) #dmodel,dmodel
         # causal mask to ensure that attention is only applied to the left in
         #     the input sequence
-        self.register_buffer("mask", torch.tril(
+        self.register_buffer("bias", torch.tril(
             torch.ones( config.block_size,  config.block_size)).view(
                 1, 1,  config.block_size,  config.block_size)) #mask
         self.n_head =  config.n_head
@@ -71,12 +71,12 @@ class MySelfAttention(nn.Module):
         scores = (relu_out@self.w2)  + self.b2
 
         scores = scores[:,:,:T,:T] # to ensure it runs for T<block_size
-        scores = scores.masked_fill(self.mask[:,:,:T,:T]==0,-1e10)
+        scores = scores.masked_fill(self.bias[:,:,:T,:T]==0,-1e10)
         prob_attn = F.softmax(scores,dim=-1)
         y = prob_attn@v
 
         y = y.transpose(1, 2).contiguous().view(B, T, C)
-        y = self.resid_drop(self.proj(y))
+        y = self.resid_drop(self.c_proj(y))
         ############################################################################
         return y
 
