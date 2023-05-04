@@ -302,10 +302,6 @@ class GPT(nn.Module):
         Most likely you'll want to make sure to be in model.eval() mode of operation for this.
         """
         probs_list = []
-        ############################################################################
-        # TODO: implement this function
-        ############################################################################
-        # raise NotImplementedError()
         for _ in range(max_new_tokens):
             # if the sequence context is growing too long we must crop it at block_size
             idx_cond = idx if idx.size(1) <= self.block_size else idx[:, -self.block_size:]
@@ -327,7 +323,6 @@ class GPT(nn.Module):
                 _, idx_next = torch.topk(probs, k=1, dim=-1)
             # append sampled index to the running sequence and continue
             idx = torch.cat((idx, idx_next), dim=1)
-        ############################################################################
         if ret_probs:
             return idx, probs_list
         return idx
